@@ -58,32 +58,62 @@ brew install kitty
 
 **Configure Kitty** (`~/.config/kitty/kitty.conf`):
 ```conf
-# Font (install a Nerd Font first)
-font_family      JetBrainsMono Nerd Font
-font_size        12.0
+# Font configuration - JetBrains Mono + Nerd Font symbols fallback
+font_family JetBrains Mono
+bold_font JetBrains Mono Bold
+italic_font JetBrains Mono Italic
+bold_italic_font auto
+font_size 14.0
 
-# Transparency support
-background_opacity 0.95
+# Add Nerd Font symbols as fallback
+symbol_map U+23FB-U+23FE,U+2665,U+26A1,U+2B58,U+E000-U+F8FF Symbols Nerd Font
 
-# Color scheme (matches Neovim theme)
-foreground #c9d1d9
-background #0d1117
+# GitHub Dark color scheme
+foreground #e6edf3
+background #0f0f0f
 
-# Cursor
-cursor_shape block
-cursor_blink_interval 0
+# Cursor colors
+cursor #58a6ff
+cursor_text_color #0d1117
 
-# Performance
+# Selection colors
+selection_foreground #0d1117
+selection_background #58a6ff
+
+# Normal colors
+color0 #484f58
+color1 #ff7b72
+color2 #3fb950
+color3 #d29922
+color4 #58a6ff
+color5 #bc8cff
+color6 #39c5cf
+color7 #b1bac4
+
+# Bright colors
+color8 #6e7681
+color9 #ffa198
+color10 #56d364
+color11 #e3b341
+color12 #79c0ff
+color13 #d2a8ff
+color14 #56d4dd
+color15 #f0f6fc
+
+# Window settings
+background_opacity 0.9
+hide_window_decorations yes
+remember_window_size yes
+initial_window_width 80c
+initial_window_height 24c
+
+# Padding
+window_padding_width 10
+
+# Performance and features
 repaint_delay 10
 input_delay 3
 sync_to_monitor yes
-
-# Window padding
-window_padding_width 4
-
-# Tab bar
-tab_bar_edge top
-tab_bar_style powerline
 ```
 
 **Install a Nerd Font** (required for icons):
