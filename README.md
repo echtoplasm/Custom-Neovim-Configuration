@@ -1,242 +1,444 @@
 # Neovim Programming Configuration
 
-A comprehensive Neovim setup optimized for multi-language development with LSP support, debugging, and modern tooling.
+A comprehensive Neovim setup optimized for multi-language development with LSP support, debugging capabilities, and modern tooling. Designed for C++, PHP, Python, JavaScript/TypeScript, and web development.
+
+## Features
+
+- **Multi-language LSP support** with auto-completion
+- **Integrated debugging** for C++ (GDB) and PHP (Xdebug)
+- **Smart code formatting** with language-specific formatters
+- **Fuzzy finding** and project navigation
+- **Git integration** with visual indicators
+- **Tree-sitter** syntax highlighting
+- **File explorer** with icons
+- **Transparent theme** (GitHub Dark)
 
 ## Supported Languages
 
-### C/C++
-- **LSP**: `clangd` with advanced features
-- **Formatter**: `clang_format`
-- **Debugger**: GDB integration via nvim-dap
-- **Syntax**: Treesitter
+| Language | LSP | Formatter | Debugger | Syntax |
+|----------|-----|-----------|----------|--------|
+| C/C++ | clangd | clang-format | GDB | Treesitter |
+| PHP | intelephense | Intelephense LSP | Xdebug | Treesitter |
+| Python | pyright | LSP fallback | - | Treesitter |
+| JavaScript/TypeScript | ts_ls | prettier | - | Treesitter |
+| HTML/CSS | - | prettier | - | Treesitter |
+| Lua | lua_ls | - | - | Treesitter |
 
-**Individual Setup:**
+## Installation
+
+### Prerequisites
+
+**Required:**
 ```bash
-# Install clangd
-sudo pacman -S clang  # Arch Linux
-# or
-sudo apt install clangd  # Ubuntu
+# Arch Linux
+sudo pacman -S neovim git nodejs npm gcc gdb
 
-# Install clang-format
-sudo pacman -S clang
+# Ubuntu/Debian
+sudo apt install neovim git nodejs npm gcc gdb
+
+# Verify Neovim version (0.8+ required)
+nvim --version
 ```
 
-### Python
-- **LSP**: `pyright`
-- **Formatter**: LSP fallback
-- **Syntax**: Treesitter
+### Terminal Setup (Recommended: Kitty)
 
-**Individual Setup:**
+Kitty is the recommended terminal for this config due to its performance and proper color support.
+
+**Install Kitty:**
 ```bash
-npm install -g pyright
+# Arch Linux
+sudo pacman -S kitty
+
+# Ubuntu/Debian
+sudo apt install kitty
+
+# macOS
+brew install kitty
 ```
 
-### JavaScript/TypeScript
-- **LSP**: `ts_ls` (TypeScript Language Server)
-- **Formatter**: `prettier`
-- **Syntax**: Treesitter
+**Configure Kitty** (`~/.config/kitty/kitty.conf`):
+```conf
+# Font (install a Nerd Font first)
+font_family      JetBrainsMono Nerd Font
+font_size        12.0
 
-**Individual Setup:**
-```bash
-npm install -g typescript typescript-language-server prettier
+# Transparency support
+background_opacity 0.95
+
+# Color scheme (matches Neovim theme)
+foreground #c9d1d9
+background #0d1117
+
+# Cursor
+cursor_shape block
+cursor_blink_interval 0
+
+# Performance
+repaint_delay 10
+input_delay 3
+sync_to_monitor yes
+
+# Window padding
+window_padding_width 4
+
+# Tab bar
+tab_bar_edge top
+tab_bar_style powerline
 ```
 
-### PHP
-- **LSP**: `intelephense`
-- **Formatter**: LSP formatting (intelephense)
-- **Syntax**: Treesitter
-
-**Individual Setup:**
+**Install a Nerd Font** (required for icons):
 ```bash
-npm install -g intelephense
-```
-
-### Lua
-- **LSP**: `lua_ls`
-- **Formatter**: LSP fallback
-- **Syntax**: Treesitter
-
-**Individual Setup:**
-Mason will handle this automatically.
-
-### Web Technologies
-- **HTML/CSS/SCSS**: Prettier formatting, Treesitter syntax
-- **JSON**: Prettier formatting, Treesitter syntax
-- **Vue/Svelte**: Prettier formatting
-
-## Key Bindings
-
-### Leader Key
-- **Leader**: `Space`
-
-### File Management
-- `Space + e` - Toggle file explorer (nvim-tree)
-- `Space + ff` - Find files (Telescope)
-- `Space + fg` - Live grep search (Telescope)  
-- `Space + fb` - Find buffers (Telescope)
-
-### Code Formatting
-- `Space + f` - Format current buffer (PHP uses LSP, others use Prettier/clang-format)
-
-### Window Navigation
-- `Ctrl + h/j/k/l` - Move between windows (left/down/up/right)
-
-### Buffer Navigation
-- `Shift + l` - Next buffer
-- `Shift + h` - Previous buffer
-
-### LSP Features (Active when LSP attaches)
-- `gd` - Go to definition
-- `gr` - Find references
-- `gI` - Go to implementation
-- `K` - Hover documentation
-- `gD` - Go to declaration
-- `Space + D` - Type definition
-- `Space + ds` - Document symbols
-- `Space + ws` - Workspace symbols
-- `Space + rn` - Rename symbol
-- `Space + ca` - Code actions
-
-### C++ Specific
-- `F5` - Compile and run in external terminal
-- `F6` - Run already compiled program
-- `Space + cc` - Compile with debug info
-- `Space + cr` - Run program
-
-### Debugging (C++)
-- `F9` - Toggle breakpoint
-- `F10` - Step over
-- `F11` - Step into
-- `F12` - Step out
-- `Space + dc` - Continue debugging
-- `Space + du` - Toggle debug UI
-
-### Terminal
-- `Esc` (in terminal mode) - Exit terminal mode
-
-### Editing
-- `Space + h` - Clear search highlights
-- `</>` (in visual mode) - Indent left/right while maintaining selection
-
-## Installation Requirements
-
-### Base Requirements
-```bash
-# Neovim (0.8+)
-sudo pacman -S neovim  # Arch
-# or
-sudo snap install nvim --classic  # Ubuntu
-
-# Node.js and npm (for language servers)
-sudo pacman -S nodejs npm
-
-# Git
-sudo pacman -S git
-
-# A Nerd Font for icons
 # Download from: https://www.nerdfonts.com/
+# Recommended: JetBrainsMono Nerd Font or FiraCode Nerd Font
+
+# Arch Linux (via AUR)
+yay -S ttf-jetbrains-mono-nerd
+
+# Or manually:
+# 1. Download from nerdfonts.com
+# 2. Extract to ~/.local/share/fonts/
+# 3. Run: fc-cache -fv
 ```
 
-### Language-Specific Tools
+### Alternative Terminals
 
-#### C/C++
-```bash
-sudo pacman -S gcc clang gdb
+If you prefer other terminals, here are basic configurations:
+
+**Alacritty** (`~/.config/alacritty/alacritty.yml`):
+```yaml
+font:
+  normal:
+    family: JetBrainsMono Nerd Font
+  size: 12.0
+
+window:
+  opacity: 0.95
+
+colors:
+  primary:
+    background: '#0d1117'
+    foreground: '#c9d1d9'
 ```
 
-#### Python
-```bash
-sudo pacman -S python python-pip
+**GNOME Terminal:**
+1. Install a Nerd Font
+2. Edit → Preferences → Profile → Colors
+3. Use transparency and dark theme
+4. Set custom font to your installed Nerd Font
+
+**Windows Terminal** (`settings.json`):
+```json
+{
+  "profiles": {
+    "defaults": {
+      "font": {
+        "face": "JetBrainsMono Nerd Font",
+        "size": 12
+      },
+      "opacity": 95,
+      "useAcrylic": true
+    }
+  }
+}
 ```
 
-#### PHP
-```bash
-sudo pacman -S php
-```
-
-#### Formatters
-```bash
-npm install -g prettier
-```
-
-## Plugin Manager
-
-This configuration uses **lazy.nvim** as the plugin manager. It will automatically install when you first start Neovim.
-
-## Plugins Included
-
-- **tokyonight.nvim** - Color scheme
-- **nvim-tree.lua** - File explorer
-- **telescope.nvim** - Fuzzy finder
-- **nvim-treesitter** - Syntax highlighting
-- **nvim-lspconfig** - LSP configuration
-- **mason.nvim** - LSP installer
-- **nvim-cmp** - Autocompletion
-- **conform.nvim** - Code formatting
-- **nvim-dap** - Debugging support
-- **lualine.nvim** - Status line
-- **gitsigns.nvim** - Git integration
-- **nvim-autopairs** - Auto-close brackets
-- **Comment.nvim** - Easy commenting
-
-## Setup Instructions
+### Install Neovim Configuration
 
 1. **Backup existing configuration:**
    ```bash
    mv ~/.config/nvim ~/.config/nvim.backup
+   mv ~/.local/share/nvim ~/.local/share/nvim.backup
    ```
 
-2. **Create new configuration:**
+2. **Clone or copy this configuration:**
    ```bash
    mkdir -p ~/.config/nvim
-   # Copy the configuration file to ~/.config/nvim/init.lua
+   # Copy init.lua to ~/.config/nvim/init.lua
    ```
 
 3. **Start Neovim:**
    ```bash
    nvim
    ```
-   
-4. **Wait for plugins to install automatically**
 
-5. **Restart Neovim and run `:checkhealth` to verify setup**
+4. **Wait for plugins to install automatically** (lazy.nvim will bootstrap and install everything)
 
-## Customization Notes
+5. **Restart Neovim and verify setup:**
+   ```vim
+   :checkhealth
+   ```
 
-### Indentation
-- Default: 4 spaces for all languages
-- PHP follows PSR-12 standard (4 spaces)
-- Modify the indentation section at the top of the config to change defaults
+### Language-Specific Setup
 
-### Theme
-- Uses Tokyo Night (moon variant) with transparency
-- To change themes, modify the colorscheme section
+#### C/C++ Development
+```bash
+# Arch Linux
+sudo pacman -S clang gdb
 
-### Additional Languages
-To add support for new languages:
+# Ubuntu/Debian
+sudo apt install clang gdb clangd
+```
 
-1. Add to Treesitter `ensure_installed` list
-2. Add LSP to Mason `ensure_installed` list  
-3. Configure the LSP in the lspconfig section
-4. Add formatter to conform.nvim `formatters_by_ft`
+#### PHP Development with Xdebug
+```bash
+# Install PHP and Xdebug
+sudo pacman -S php xdebug  # Arch
+# or
+sudo apt install php php-xdebug  # Ubuntu
+
+# Configure Xdebug (add to /etc/php/php.ini)
+sudo nvim /etc/php/php.ini
+```
+
+Add at the end of `php.ini`:
+```ini
+[xdebug]
+zend_extension=xdebug.so
+xdebug.mode=debug
+xdebug.start_with_request=yes
+xdebug.client_port=9003
+```
+
+Verify Xdebug is loaded:
+```bash
+php -m | grep xdebug
+```
+
+#### Python Development
+```bash
+sudo pacman -S python python-pip
+```
+
+#### JavaScript/TypeScript Development
+```bash
+npm install -g typescript typescript-language-server prettier
+```
+
+## Complete Keybindings Reference
+
+### Leader Key
+- **Leader**: `Space`
+
+### File Management
+| Key | Action |
+|-----|--------|
+| `Space + e` | Toggle file explorer (nvim-tree) |
+| `Space + ff` | Find files (Telescope) |
+| `Space + fg` | Live grep search (Telescope) |
+| `Space + fb` | Find buffers (Telescope) |
+
+### Window Navigation
+| Key | Action |
+|-----|--------|
+| `Ctrl + h` | Move to left window |
+| `Ctrl + j` | Move to bottom window |
+| `Ctrl + k` | Move to top window |
+| `Ctrl + l` | Move to right window |
+
+### Buffer Navigation
+| Key | Action |
+|-----|--------|
+| `Shift + l` | Next buffer |
+| `Shift + h` | Previous buffer |
+
+### Editing
+| Key | Action |
+|-----|--------|
+| `Space + h` | Clear search highlights |
+| `<` (visual mode) | Indent left (maintains selection) |
+| `>` (visual mode) | Indent right (maintains selection) |
+
+### Code Formatting
+| Key | Action |
+|-----|--------|
+| `Space + f` | Format current buffer |
+
+### LSP Features (Active when LSP attaches)
+| Key | Action |
+|-----|--------|
+| `gd` | Go to definition |
+| `gr` | Find references |
+| `gI` | Go to implementation |
+| `gD` | Go to declaration |
+| `K` | Hover documentation |
+| `Space + D` | Type definition |
+| `Space + ds` | Document symbols |
+| `Space + ws` | Workspace symbols |
+| `Space + rn` | Rename symbol |
+| `Space + ca` | Code actions |
+
+### Documentation Generation
+| Key | Action |
+|-----|--------|
+| `Space + d` | Generate documentation |
+| `Space + df` | Generate function documentation |
+| `Space + d0` | Generate class documentation |
+
+### C++ Specific
+| Key | Action |
+|-----|--------|
+| `F5` | Compile and run with debug symbols |
+| `F6` | Run already compiled program |
+| `Space + cc` | Compile with debug info only |
+| `Space + cr` | Run compiled program |
+| `Space + cm` | Compile with AddressSanitizer (memory leak detection) |
+
+### Debugging (C++ and PHP)
+| Key | Action |
+|-----|--------|
+| `F9` | Toggle breakpoint |
+| `F10` | Step over |
+| `F11` | Step into |
+| `F12` | Step out |
+| `Space + dc` | Start/Continue debugging |
+| `Space + du` | Toggle debug UI |
+| `Space + dr` | Open debug REPL |
+
+### Code Snippets
+| Key | Action |
+|-----|--------|
+| `Space + html` | Insert HTML5 boilerplate |
+| `Space + af` | Insert arrow function template |
+
+### Terminal
+| Key | Action |
+|-----|--------|
+| `Esc` (in terminal mode) | Exit terminal mode to normal mode |
+
+## Debugging Workflows
+
+### C++ Debugging
+1. Compile with debug symbols: `F5` or `Space + cc`
+2. Set breakpoints: `F9` on desired lines
+3. Start debugger: `Space + dc`
+4. When prompted, enter path to executable (e.g., `./myprogram`)
+5. Use `F10` (step over), `F11` (step into), `F12` (step out)
+6. Hover over variables to inspect values
+
+### PHP Debugging (Xdebug)
+1. Ensure Xdebug is installed and configured
+2. Open your PHP file in Neovim
+3. Set breakpoints: `F9` on desired lines
+4. Start debugger listening: `Space + dc`
+5. Run your PHP script: `php script.php` (CLI) or visit page in browser (web)
+6. Debugger will pause at breakpoints
+7. Use `F10`, `F11`, `F12` to step through code
+
+### Memory Leak Detection (C++)
+1. Compile with AddressSanitizer: `Space + cm`
+2. Run the program
+3. AddressSanitizer will report any memory leaks with exact line numbers
+
+## Plugins Included
+
+- **lazy.nvim** - Plugin manager (auto-installs on first run)
+- **github-nvim-theme** - Color scheme
+- **dashboard-nvim** - Start screen
+- **nvim-tree.lua** - File explorer
+- **telescope.nvim** - Fuzzy finder
+- **nvim-treesitter** - Syntax highlighting
+- **nvim-lspconfig** - LSP configuration
+- **mason.nvim** - LSP/tool installer
+- **mason-lspconfig.nvim** - LSP integration
+- **nvim-cmp** - Autocompletion
+- **LuaSnip** - Snippet engine
+- **conform.nvim** - Code formatting
+- **nvim-dap** - Debug Adapter Protocol
+- **nvim-dap-ui** - Debug UI
+- **nvim-dap-virtual-text** - Inline variable values during debugging
+- **lualine.nvim** - Status line
+- **gitsigns.nvim** - Git integration
+- **nvim-autopairs** - Auto-close brackets
+- **Comment.nvim** - Easy commenting
+- **neogen** - Documentation generation
+
+## Customization
+
+### Change Indentation
+Edit the indentation section in `init.lua`:
+```lua
+vim.opt.tabstop = 4      -- Change to your preference
+vim.opt.shiftwidth = 4   -- Should match tabstop
+vim.opt.softtabstop = 4  -- Should match tabstop
+```
+
+### Change Theme
+Replace the colorscheme section with another theme:
+```lua
+{
+  'folke/tokyonight.nvim',
+  config = function()
+    vim.cmd('colorscheme tokyonight-night')
+  end,
+}
+```
+
+### Add Language Support
+1. Add to Treesitter `ensure_installed`
+2. Add LSP to Mason `ensure_installed`
+3. Configure the LSP in lspconfig section
+4. Add formatter to conform.nvim
+
+### Disable Transparency
+In the theme config, change:
+```lua
+transparent = false,  -- Change from true
+```
 
 ## Troubleshooting
 
 ### LSP Not Working
-- Run `:Mason` to check if language servers are installed
-- Run `:LspInfo` to see active language servers
-- Check `:checkhealth` for issues
+```vim
+:Mason          " Check if language servers are installed
+:LspInfo        " See active language servers
+:checkhealth    " Comprehensive health check
+```
 
-### Formatting Not Working
-- Ensure prettier is installed globally: `npm list -g prettier`
-- Check conform.nvim log: `:ConformInfo`
+### Icons Not Showing
+- Verify you have a Nerd Font installed
+- Check your terminal is using the Nerd Font
+- Run: `fc-list | grep -i "nerd"`
+
+### Debugging Not Working
+
+**C++:**
+- Ensure GDB is installed: `gdb --version`
+- Compile with `-g` flag (done automatically with `F5`)
+
+**PHP:**
+- Verify Xdebug is loaded: `php -m | grep xdebug`
+- Check Xdebug port: `php -i | grep xdebug.client_port`
+- Start debugger BEFORE running PHP script
 
 ### Performance Issues
 - Run `:checkhealth` to identify problems
-- Consider reducing Treesitter languages if not needed
+- Reduce Treesitter languages if not needed
+- Disable unused plugins
+
+### Mason Installation Failures
+```bash
+# Ensure Node.js and npm are installed and up to date
+node --version
+npm --version
+
+# Clear Mason cache
+rm -rf ~/.local/share/nvim/mason
+```
 
 ## File Structure
 ```
 ~/.config/nvim/
 └── init.lua  (main configuration file)
 ```
+
+## Additional Resources
+
+- [Neovim Documentation](https://neovim.io/doc/)
+- [Lazy.nvim](https://github.com/folke/lazy.nvim)
+- [Mason Registry](https://mason-registry.dev/)
+- [Telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
+- [nvim-dap](https://github.com/mfussenegger/nvim-dap)
+
+## Credits
+
+Built with modern Neovim plugins and configured for an optimal development experience across multiple languages.
